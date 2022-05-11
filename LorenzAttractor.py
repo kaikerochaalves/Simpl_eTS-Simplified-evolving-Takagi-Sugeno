@@ -141,7 +141,7 @@ print("Final Rules = ", Rules[-1])
 
 # Plot the graphic of the actual time series and the eTS predictions
 plt.plot(y_test, label='Actual Value', color='red')
-plt.plot(OutputTestDenormalized, color='blue', label='eTS')
+plt.plot(OutputTestDenormalized, color='blue', label='Simpl_eTS')
 plt.ylabel('Output')
 plt.xlabel('Samples')
 plt.legend()
