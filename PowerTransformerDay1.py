@@ -66,7 +66,7 @@ plt.xlabel('Samples')
 plt.show()
 
 #-----------------------------------------------------------------------------
-# Calling the eTS
+# Calling the Simpl_eTS
 #-----------------------------------------------------------------------------
 
 # Setting the hyperparameters
@@ -105,9 +105,9 @@ print("Final Rules = ", Rules[-1])
 # Plot the graphics
 #-----------------------------------------------------------------------------
 
-# Plot the graphic of the actual time series and the eTS predictions
+# Plot the graphic of the actual time series and the Simpl_eTS predictions
 plt.plot(y_train, label='Actual Value', color='red')
-plt.plot(OutputTrainingDenormalized, color='blue', label='eTS')
+plt.plot(OutputTrainingDenormalized, color='blue', label='Simpl_eTS')
 plt.ylabel('Output')
 plt.xlabel('Samples')
 plt.legend()
