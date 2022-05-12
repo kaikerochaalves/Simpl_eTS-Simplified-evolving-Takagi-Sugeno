@@ -58,8 +58,6 @@ class Simpl_eTS:
             # Compute the data scatter
             self.Update_Data_Scatter(z_prev, z, i, k+1)
             # Find the rule with the minimum and maximum scatter
-            if k == 201:
-                sdf = 0
             IdxMinScatter = self.parameters['Scatter'].idxmin()
             IdxMaxScatter = self.parameters['Scatter'].idxmax()
             # Compute minimum delta
@@ -141,13 +139,15 @@ class Simpl_eTS:
                               
     def Rule_Update(self, x, z):
         dist = []
+        idx = []
         for row in self.parameters.index:
             dist.append(np.linalg.norm(self.parameters.loc[row, 'Center_Z'] - z))
-        index = dist.index(min(dist))
-        self.parameters.iloc[index, 6] = self.parameters.iloc[index, 6] + 1
-        self.parameters.iloc[index, 0] = z
-        self.parameters.iloc[index, 0] = x
-        self.parameters.iloc[index, 4] = self.DataScatter.item()
+            idx.append(row)
+        index = idx.index(dist.index(min(dist)))
+        self.parameters.at[index, 'NumPoints'] = self.parameters.loc[index, 'NumPoints'] + 1
+        self.parameters.at[index, 'Center_Z'] = z
+        self.parameters.at[index, 'Center_X'] = x
+        self.parameters.at[index, 'Potential'] = self.DataPotential.item()
             
     def Update_Num_Points(self, z):
         dist = []
