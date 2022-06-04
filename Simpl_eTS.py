@@ -38,7 +38,8 @@ class Simpl_eTS:
         # Compute z
         z = np.concatenate((x.T, y[0].reshape(-1,1)), axis=1).T
         # Initialize the first rule
-        self.parameters = self.parameters.append(self.Initialize_First_Cluster(x, y[0], z), ignore_index = True)
+        self.Initialize_First_Cluster(x, y[0], z)
+        #self.parameters = self.parameters.append(self.Initialize_First_Cluster(x, y[0], z), ignore_index = True)
         # Update lambda of the first rule
         self.Update_Lambda(x)
         # Update the consequent parameters of the fist rule
@@ -56,10 +57,10 @@ class Simpl_eTS:
             for i in self.parameters.index:
                 self.Update_Rule_Scatter(z, z_prev, i, k+1)
             # Compute the data scatter
-            self.Update_Data_Scatter(z_prev, z, i, k+1)
+            self.Update_Data_Scatter(z_prev, z, k+1)
             # Find the rule with the minimum and maximum scatter
-            IdxMinScatter = self.parameters['Scatter'].idxmin()
-            IdxMaxScatter = self.parameters['Scatter'].idxmax()
+            IdxMinScatter = self.parameters['Scatter'].astype('float64').idxmin()
+            IdxMaxScatter = self.parameters['Scatter'].astype('float64').idxmax()
             # Compute minimum delta
             Delta = self.Minimum_Distance(z)
             # Verifying the needing to creating a new rule
@@ -68,7 +69,8 @@ class Simpl_eTS:
                 self.Rule_Update(x, z)
             elif self.DataScatter.item() < self.parameters.loc[IdxMinScatter, 'Scatter'] or self.DataScatter.item() > self.parameters.loc[IdxMaxScatter, 'Scatter']:
                 # Create a new rule
-                self.parameters = self.parameters.append(self.Initialize_Cluster(x, z, k+1, i), ignore_index = True)
+                self.Initialize_Cluster(x, z, k+1, i)
+                #self.parameters = self.parameters.append(self.Initialize_Cluster(x, z, k+1, i), ignore_index = True)
             elif Delta > 0.5 * self.hyperparameters.loc[0, 'r']:
                 # Update num points
                 self.Update_Num_Points(z)
@@ -104,11 +106,10 @@ class Simpl_eTS:
         return self.OutputTestPhase
         
     def Initialize_First_Cluster(self, x, y, z):
-        NewRow = {'Center_Z': z, 'Center_X': x, 'C': self.hyperparameters.loc[0, 'InitialOmega'] * np.eye(x.shape[0] + 1), 'Theta': np.zeros((x.shape[0] + 1, 1)), 'Scatter': self.InitialScatter, 'TimeCreation': 1., 'NumPoints': 1.}
+        self.parameters = pd.DataFrame([[z, x, self.hyperparameters.loc[0, 'InitialOmega'] * np.eye(x.shape[0] + 1), np.zeros((x.shape[0] + 1, 1)), self.InitialScatter, 1., 1.]], columns = ['Center_Z', 'Center_X', 'C', 'Theta', 'Scatter', 'TimeCreation', 'NumPoints'])
         Output = y
         self.OutputTrainingPhase = np.append(self.OutputTrainingPhase, Output)
         self.ResidualTrainingPhase = np.append(self.ResidualTrainingPhase,(Output - y)**2)
-        return NewRow
     
     def Initialize_Cluster(self, x, z, k, i):
         Theta = np.zeros((x.shape[0] + 1, 1))
@@ -116,8 +117,8 @@ class Simpl_eTS:
         self.Update_Lambda(x)
         for row in self.parameters.index:
             Theta = Theta + self.parameters.loc[row, 'Lambda'] * self.parameters.loc[row, 'Theta']
-        NewRow = {'Center_Z': z, 'Center_X': x, 'C': self.hyperparameters.loc[0, 'InitialOmega'] * np.eye(x.shape[0] + 1), 'Theta': Theta, 'Scatter': self.DataScatter.item(), 'TimeCreation': k, 'NumPoints': 1}
-        return NewRow
+        NewRow = pd.DataFrame([[z, x, self.hyperparameters.loc[0, 'InitialOmega'] * np.eye(x.shape[0] + 1), Theta, self.DataScatter.item(), k, 1.]], columns = ['Center_Z', 'Center_X', 'C', 'Theta', 'Scatter', 'TimeCreation', 'NumPoints'])
+        self.parameters = pd.concat([self.parameters, NewRow], ignore_index=True)
       
     def Update_Rule_Scatter(self, z, z_prev, i, k):
         self.parameters.at[i, 'Scatter'] = (((k - 2) / (k - 1)) * self.parameters.loc[i, 'Scatter']) + sum((z - z_prev)**2)
@@ -126,7 +127,7 @@ class Simpl_eTS:
         distance = np.linalg.norm(p1 - p2)
         return distance
     
-    def Update_Data_Scatter(self, z_prev, z, i, k):
+    def Update_Data_Scatter(self, z_prev, z, k):
         self.Beta = self.Beta + z_prev
         self.Gamma = self.Sigma + sum(z_prev**2)
         self.DataScatter = (1 / ((k - 1) * (z.shape[0]))) * ((k - 1) * sum(z**2) - 2 * sum(z * self.Beta) + self.Gamma)
@@ -143,11 +144,10 @@ class Simpl_eTS:
         for row in self.parameters.index:
             dist.append(np.linalg.norm(self.parameters.loc[row, 'Center_Z'] - z))
             idx.append(row)
-        index = idx.index(dist.index(min(dist)))
+        index = idx[dist.index(min(dist))]
         self.parameters.at[index, 'NumPoints'] = self.parameters.loc[index, 'NumPoints'] + 1
         self.parameters.at[index, 'Center_Z'] = z
         self.parameters.at[index, 'Center_X'] = x
-        self.parameters.at[index, 'Potential'] = self.DataPotential.item()
             
     def Update_Num_Points(self, z):
         dist = []
