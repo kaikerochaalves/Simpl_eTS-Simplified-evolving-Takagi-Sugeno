@@ -24,7 +24,7 @@ The paper [2] has a complete review of the eFSs.
 
 - PowerTransformerDay3.py (https://github.com/kaikerochaalves/Simpl_eTS-Simplified-evolving-Takagi-Sugeno/blob/0a49ebfa7f2ab9675ead2c25bb3759ab1e90acfc/PowerTransformerDay3.py) is the script to prepare the dataset of the power transformers on day 3, perform simulations, compute the results and plot the graphics.
 
-- PowerTransformerAllDays.py(https://github.com/kaikerochaalves/Simpl_eTS-Simplified-evolving-Takagi-Sugeno/blob/60df6de1fd475a4daad574ac5174fd7d98628801/PowerTransformerAllDays.py) is the script to prepare the dataset of the power transformers on day 1 to train the model, and days 2 and 3 to perform simulations, compute the results and plot the graphics.
+- PowerTransformerAllDays.py (https://github.com/kaikerochaalves/Simpl_eTS-Simplified-evolving-Takagi-Sugeno/blob/60df6de1fd475a4daad574ac5174fd7d98628801/PowerTransformerAllDays.py) is the script to prepare the dataset of the power transformers on day 1 to train the model, and days 2 and 3 to perform simulations, compute the results and plot the graphics.
 
 - GridSearch_AllDatasets.py (https://github.com/kaikerochaalves/Simpl_eTS-Simplified-evolving-Takagi-Sugeno/blob/0a49ebfa7f2ab9675ead2c25bb3759ab1e90acfc/GridSearch_AllDatasets.py) is the script performing a grid search for the hyperparameters for all datasets.
 
