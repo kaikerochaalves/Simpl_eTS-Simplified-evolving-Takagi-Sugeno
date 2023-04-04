@@ -39,7 +39,6 @@ class Simpl_eTS:
         z = np.concatenate((x.T, y[0].reshape(-1,1)), axis=1).T
         # Initialize the first rule
         self.Initialize_First_Cluster(x, y[0], z)
-        #self.parameters = self.parameters.append(self.Initialize_First_Cluster(x, y[0], z), ignore_index = True)
         # Update lambda of the first rule
         self.Update_Lambda(x)
         # Update the consequent parameters of the fist rule
@@ -178,7 +177,7 @@ class Simpl_eTS:
         for i in self.parameters.index:
             if self.parameters.loc[i, 'NumPoints'] / N_total < self.ThresholdRemoveRules:
                 remove.append(i)
-        if len(remove) > 0:    
+        if len(remove) > 0 and len(remove) < self.parameters.shape[0]:    
             self.parameters = self.parameters.drop(remove)
     
     def RLS(self, x, y, xe):
