@@ -30,4 +30,4 @@ The paper [2] has a complete review of the eFSs.
 
 [1] P. Angelov, D. Filev, Simpl_eTS: A simplified method for learning evolving Takagi-Sugeno fuzzy models, in: The 14th IEEE International Conference on Fuzzy Systems, 2005. FUZZ’05., IEEE, 2005, pp. 1068–1073, http://dx.doi.org/10.1109/fuzzy.2005.1452543.
 
-[2] K.S.T.R. Alves, E. P. Aguiar, A novel rule-based evolving Fuzzy System applied to the thermal modeling of power transformers. Appl. Soft Comput. 112 (2021) 107764-107764, https://doi.org/10.1016/j.asoc.2021.
+[2] K.S.T.R. Alves, E. P. Aguiar, A novel rule-based evolving Fuzzy System applied to the thermal modeling of power transformers. Appl. Soft Comput. 112 (2021) 107764-107764, https://doi.org/10.1016/j.asoc.2021.107764.
